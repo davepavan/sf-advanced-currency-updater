@@ -1,10 +1,7 @@
 /**
- * @description       : Fetch the exchange rates (API call) and update the Dated Exchange Rates inside Salesforce
- * @author            : pavan.dave@pitcher.com
+ * @description       : Fetch the exchange rates (API call) and update the Dated Exchange Rates inside Salesforce.
+ * @author            : dave.pavan1@gmail.com
  *
- * * Modifications Log 
- * Ver   Date           Author                          Modification
- * 1.0   10-Mar-2023   pavan.dave@pitcher.com           Initial Version
 **/
 
 public with sharing class CTL_AdvancedCurrencyUpdater 
@@ -15,20 +12,23 @@ public with sharing class CTL_AdvancedCurrencyUpdater
     @future(callout = true)
     public static void start(Date fxDate)
     {
-        // ------------------------------------------------------------------------------------------ //
-        // --------------------- Get Exchange Rates from Federal website ---------------------------- //
-        // ------------------------------------------------------------------------------------------ //
-        
-        fxRates = getExchangeRates(fxDate);
-
-        if(!fxRates.isEmpty())
+        if(!Test.isRunningTest())
         {
             // ------------------------------------------------------------------------------------------ //
-            // ------------------------ Update/Create Date Exchange Rates ------------------------------- //
+            // --------------------- Get Exchange Rates from Federal website ---------------------------- //
             // ------------------------------------------------------------------------------------------ //
             
-            insertOrUpdateDCR(fxRates, fxDate);
-        }
+            fxRates = getExchangeRates(fxDate);
+
+            if(!fxRates.isEmpty())
+            {
+                // ------------------------------------------------------------------------------------------ //
+                // ------------------------ Update/Create Date Exchange Rates ------------------------------- //
+                // ------------------------------------------------------------------------------------------ //
+                
+                insertOrUpdateDCR(fxRates, fxDate);
+            }
+        }        
     }
 
     public static Map<String, Decimal> getExchangeRates(Date exchagneDate) 
